@@ -4,8 +4,9 @@ Command: npx gltfjsx@6.2.10 public/models/shark.glb -o src/components/Shark.jsx 
 */
 
 import React, { useEffect, useId, useRef } from 'react'
-import { useGLTF } from '@react-three/drei'
+import { useGLTF, useScroll } from '@react-three/drei'
 import * as THREE from 'three'
+import { useFrame } from '@react-three/fiber'
 
 export function Shark(props) {
   const { nodes, materials } = useGLTF('/models/shark.glb')
@@ -20,379 +21,112 @@ export function Shark(props) {
       mesh.originalPosition = mesh.position.clone()
       const meshWorldPosition = new THREE.Vector3()
       mesh.getWorldPosition(meshWorldPosition)
+
+      mesh.directionVector = meshWorldPosition.clone().sub(groupWorldPosition).normalize()
+      mesh.targetPosition = mesh.originalPosition.clone().add(mesh.directionVector.clone().multiplyScalar(3))
     });
   },[])
 
+  const scrollData = useScroll()
+
+  useFrame(()=>{
+    group.current.children.forEach((mesh)=>{
+
+      if(scrollData.offset < 0.0001){
+        if(mesh.name === "origin"){
+          mesh.visible = true
+        }else{
+          mesh.visible = false
+        }
+      }else{
+        if(mesh.name === "origin"){
+          mesh.visible = false
+        }else{
+          mesh.visible = true
+        }
+      }
+
+      mesh.position.x = THREE.MathUtils.lerp(
+        mesh.originalPosition.x,
+        mesh.targetPosition.x,
+        scrollData.offset,
+      )
+      mesh.position.y = THREE.MathUtils.lerp(
+        mesh.originalPosition.y,
+        mesh.targetPosition.y,
+        scrollData.offset,
+      )
+      mesh.position.z = THREE.MathUtils.lerp(
+        mesh.originalPosition.z,
+        mesh.targetPosition.z,
+        scrollData.offset,
+      )
+    })
+  })
+
   return (
     <group {...props} dispose={null} ref={group}>
-      <group name="Node_cell" position={[0.346, -0.42, -1.625]}>
-        <mesh name="Node_cell099_1" geometry={nodes.Node_cell099_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell099_2" geometry={nodes.Node_cell099_2.geometry} material={materials.lambert2SG} />
-      </group>
-      <group name="Node_cell001" position={[-0.307, -0.167, 1.969]}>
-        <mesh name="Node_cell100_1" geometry={nodes.Node_cell100_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell100_2" geometry={nodes.Node_cell100_2.geometry} material={materials.lambert2SG} />
-        <mesh name="Node_cell100_3" geometry={nodes.Node_cell100_3.geometry} material={materials.lambert3SG} />
-      </group>
-      <group name="Node_cell002" position={[-0.132, -0.133, 2.217]}>
-        <mesh name="Node_cell001_1" geometry={nodes.Node_cell001_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell001_2" geometry={nodes.Node_cell001_2.geometry} material={materials.lambert2SG} />
-        <mesh name="Node_cell001_3" geometry={nodes.Node_cell001_3.geometry} material={materials.lambert3SG} />
-      </group>
-      <group name="Node_cell003" position={[0.164, -0.25, 2.26]}>
-        <mesh name="Node_cell002_1" geometry={nodes.Node_cell002_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell002_2" geometry={nodes.Node_cell002_2.geometry} material={materials.lambert2SG} />
-      </group>
-      <mesh name="Node_cell004" geometry={nodes.Node_cell004.geometry} material={materials.lambert4SG} position={[-0.028, -0.204, 2.396]} />
-      <group name="Node_cell005" position={[-0.093, 0.98, -0.664]}>
-        <mesh name="Node_cell004_1" geometry={nodes.Node_cell004_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell004_2" geometry={nodes.Node_cell004_2.geometry} material={materials.lambert2SG} />
-      </group>
-      <group name="Node_cell008" position={[-0.233, -0.173, 2.069]}>
-        <mesh name="Node_cell007" geometry={nodes.Node_cell007.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell007_1" geometry={nodes.Node_cell007_1.geometry} material={materials.lambert2SG} />
-        <mesh name="Node_cell007_2" geometry={nodes.Node_cell007_2.geometry} material={materials.lambert3SG} />
-      </group>
-      <group name="Node_cell009" position={[0.679, -0.183, -0.594]}>
-        <mesh name="Node_cell008_1" geometry={nodes.Node_cell008_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell008_2" geometry={nodes.Node_cell008_2.geometry} material={materials.lambert2SG} />
-      </group>
-      <mesh name="Node_cell010" geometry={nodes.Node_cell010.geometry} material={materials.lambert4SG} position={[-0.102, -0.259, 2.271]} />
-      <group name="Node_cell011" position={[-0.109, -0.062, 2.01]}>
-        <mesh name="Node_cell010_1" geometry={nodes.Node_cell010_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell010_2" geometry={nodes.Node_cell010_2.geometry} material={materials.lambert3SG} />
-      </group>
-      <group name="Node_cell013" position={[-0.009, 0.128, 2.524]}>
-        <mesh name="Node_cell012" geometry={nodes.Node_cell012.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell012_1" geometry={nodes.Node_cell012_1.geometry} material={materials.lambert2SG} />
-      </group>
-      <group name="Node_cell014" position={[-0.003, 0.087, -3.783]}>
-        <mesh name="Node_cell013_1" geometry={nodes.Node_cell013_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell013_2" geometry={nodes.Node_cell013_2.geometry} material={materials.lambert2SG} />
-      </group>
-      <group name="Node_cell016" position={[-0.002, 0.658, -4.522]}>
-        <mesh name="Node_cell015" geometry={nodes.Node_cell015.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell015_1" geometry={nodes.Node_cell015_1.geometry} material={materials.lambert2SG} />
-      </group>
-      <group name="Node_cell018" position={[0.178, -0.262, 1.506]}>
-        <mesh name="Node_cell016_1" geometry={nodes.Node_cell016_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell016_2" geometry={nodes.Node_cell016_2.geometry} material={materials.lambert2SG} />
-        <mesh name="Node_cell016_3" geometry={nodes.Node_cell016_3.geometry} material={materials.lambert3SG} />
-      </group>
-      <group name="Node_cell019" position={[0.31, -0.056, 1.835]}>
-        <mesh name="Node_cell017_1" geometry={nodes.Node_cell017_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell017_2" geometry={nodes.Node_cell017_2.geometry} material={materials.lambert2SG} />
-        <mesh name="Node_cell017_3" geometry={nodes.Node_cell017_3.geometry} material={materials.lambert3SG} />
-      </group>
-      <mesh name="Node_cell020" geometry={nodes.Node_cell020.geometry} material={materials.lambert4SG} position={[-0.274, -0.2, 2.134]} />
-      <group name="Node_cell022" position={[0.267, -0.117, 2.024]}>
-        <mesh name="Node_cell019_1" geometry={nodes.Node_cell019_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell019_2" geometry={nodes.Node_cell019_2.geometry} material={materials.lambert3SG} />
-      </group>
-      <group name="Node_cell023" position={[0.01, 0.201, -4.351]}>
-        <mesh name="Node_cell020_1" geometry={nodes.Node_cell020_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell020_2" geometry={nodes.Node_cell020_2.geometry} material={materials.lambert2SG} />
-      </group>
-      <group name="Node_cell024" position={[0.697, -0.274, 0.076]}>
-        <mesh name="Node_cell021_1" geometry={nodes.Node_cell021_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell021_2" geometry={nodes.Node_cell021_2.geometry} material={materials.lambert2SG} />
-      </group>
-      <group name="Node_cell025" position={[-0.058, -0.15, 2.296]}>
-        <mesh name="Node_cell022_1" geometry={nodes.Node_cell022_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell022_2" geometry={nodes.Node_cell022_2.geometry} material={materials.lambert2SG} />
-        <mesh name="Node_cell022_3" geometry={nodes.Node_cell022_3.geometry} material={materials.lambert3SG} />
-      </group>
-      <group name="Node_cell026" position={[0.417, 0.262, -0.904]}>
-        <mesh name="Node_cell023_1" geometry={nodes.Node_cell023_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell023_2" geometry={nodes.Node_cell023_2.geometry} material={materials.lambert2SG} />
-      </group>
-      <mesh name="Node_cell029" geometry={nodes.Node_cell029.geometry} material={materials.lambert4SG} position={[0.158, -0.225, 2.224]} />
-      <mesh name="Node_cell030" geometry={nodes.Node_cell030.geometry} material={materials.lambert4SG} position={[-0.028, -0.179, 2.406]} />
-      <mesh name="Node_cell031" geometry={nodes.Node_cell031.geometry} material={materials.lambert4SG} position={[-0.023, -0.253, 2.325]} />
-      <group name="Node_cell032" position={[-0.104, 0.776, -0.262]}>
-        <mesh name="Node_cell029_1" geometry={nodes.Node_cell029_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell029_2" geometry={nodes.Node_cell029_2.geometry} material={materials.lambert2SG} />
-      </group>
-      <mesh name="Node_cell033" geometry={nodes.Node_cell033.geometry} material={materials.lambert4SG} position={[0.284, -0.178, 2.14]} />
-      <mesh name="Node_cell035" geometry={nodes.Node_cell035.geometry} material={materials.lambert4SG} position={[-0.159, -0.182, 2.299]} />
-      <group name="Node_cell036" position={[0, -0.289, -4.518]}>
-        <mesh name="Node_cell033_1" geometry={nodes.Node_cell033_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell033_2" geometry={nodes.Node_cell033_2.geometry} material={materials.lambert2SG} />
-      </group>
-      <group name="Node_cell037" position={[0.153, -0.372, 2.024]}>
-        <mesh name="Node_cell034" geometry={nodes.Node_cell034.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell034_1" geometry={nodes.Node_cell034_1.geometry} material={materials.lambert2SG} />
-        <mesh name="Node_cell034_2" geometry={nodes.Node_cell034_2.geometry} material={materials.lambert3SG} />
-      </group>
-      <mesh name="Node_cell039" geometry={nodes.Node_cell039.geometry} material={materials.lambert4SG} position={[-0.227, -0.089, 2.171]} />
-      <group name="Node_cell040" position={[0.165, -0.107, 2.16]}>
-        <mesh name="Node_cell037_1" geometry={nodes.Node_cell037_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell037_2" geometry={nodes.Node_cell037_2.geometry} material={materials.lambert2SG} />
-        <mesh name="Node_cell037_3" geometry={nodes.Node_cell037_3.geometry} material={materials.lambert3SG} />
-      </group>
-      <group name="Node_cell041" position={[-0.263, 0.222, -2.471]}>
-        <mesh name="Node_cell038" geometry={nodes.Node_cell038.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell038_1" geometry={nodes.Node_cell038_1.geometry} material={materials.lambert2SG} />
-      </group>
-      <group name="Node_cell042" position={[-0.006, -0.163, 2.324]}>
-        <mesh name="Node_cell039_1" geometry={nodes.Node_cell039_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell039_2" geometry={nodes.Node_cell039_2.geometry} material={materials.lambert3SG} />
-      </group>
-      <mesh name="Node_cell043" geometry={nodes.Node_cell043.geometry} material={materials.lambert4SG} position={[-0.372, -0.174, 2.022]} />
-      <mesh name="Node_cell045" geometry={nodes.Node_cell045.geometry} material={materials.lambert4SG} position={[-0.182, -0.203, 2.27]} />
-      <mesh name="Node_cell046" geometry={nodes.Node_cell046.geometry} material={materials.lambert4SG} position={[-0.348, -0.176, 2.049]} />
-      <group name="Node_cell047" position={[0.001, 1.4, -0.627]}>
-        <mesh name="Node_cell044" geometry={nodes.Node_cell044.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell044_1" geometry={nodes.Node_cell044_1.geometry} material={materials.lambert2SG} />
-      </group>
-      <mesh name="Node_cell048" geometry={nodes.Node_cell048.geometry} material={materials.lambert4SG} position={[-0.053, -0.241, 2.312]} />
-      <mesh name="Node_cell049" geometry={nodes.Node_cell049.geometry} material={materials.lambert4SG} position={[0.241, -0.132, 2.173]} />
-      <group name="Node_cell050" position={[0.242, 0.064, -2.69]}>
-        <mesh name="Node_cell047_1" geometry={nodes.Node_cell047_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell047_2" geometry={nodes.Node_cell047_2.geometry} material={materials.lambert2SG} />
-      </group>
-      <group name="Node_cell051" position={[0.299, -0.238, 2.093]}>
-        <mesh name="Node_cell048_1" geometry={nodes.Node_cell048_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell048_2" geometry={nodes.Node_cell048_2.geometry} material={materials.lambert2SG} />
-      </group>
-      <group name="Node_cell052" position={[0.325, -0.172, 2.114]}>
-        <mesh name="Node_cell049_1" geometry={nodes.Node_cell049_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell049_2" geometry={nodes.Node_cell049_2.geometry} material={materials.lambert2SG} />
-      </group>
-      <mesh name="Node_cell053" geometry={nodes.Node_cell053.geometry} material={materials.lambert4SG} position={[-0.257, -0.193, 2.163]} />
-      <mesh name="Node_cell054" geometry={nodes.Node_cell054.geometry} material={materials.lambert4SG} position={[0.136, -0.177, 2.324]} />
-      <group name="Node_cell055" position={[-0.036, -0.138, 2.282]}>
-        <mesh name="Node_cell052_1" geometry={nodes.Node_cell052_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell052_2" geometry={nodes.Node_cell052_2.geometry} material={materials.lambert3SG} />
-      </group>
-      <group name="Node_cell057" position={[-0.019, -0.061, -4.276]}>
-        <mesh name="Node_cell054_1" geometry={nodes.Node_cell054_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell054_2" geometry={nodes.Node_cell054_2.geometry} material={materials.lambert2SG} />
-      </group>
-      <mesh name="Node_cell058" geometry={nodes.Node_cell058.geometry} material={materials.lambert4SG} position={[0.249, -0.216, 2.123]} />
-      <mesh name="Node_cell060" geometry={nodes.Node_cell060.geometry} material={materials.lambert4SG} position={[0.191, -0.212, 2.203]} />
-      <mesh name="Node_cell061" geometry={nodes.Node_cell061.geometry} material={materials.lambert4SG} position={[-0.054, -0.196, 2.381]} />
-      <group name="Node_cell062" position={[0.522, 0.284, -0.098]}>
-        <mesh name="Node_cell059" geometry={nodes.Node_cell059.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell059_1" geometry={nodes.Node_cell059_1.geometry} material={materials.lambert2SG} />
-      </group>
-      <group name="Node_cell063" position={[-0.056, 0.28, 1.022]}>
-        <mesh name="Node_cell060_1" geometry={nodes.Node_cell060_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell060_2" geometry={nodes.Node_cell060_2.geometry} material={materials.lambert2SG} />
-      </group>
-      <group name="Node_cell064" position={[0.001, 0.148, -4.567]}>
-        <mesh name="Node_cell061_1" geometry={nodes.Node_cell061_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell061_2" geometry={nodes.Node_cell061_2.geometry} material={materials.lambert2SG} />
-      </group>
-      <group name="Node_cell065" position={[0, -0.524, -4.603]}>
-        <mesh name="Node_cell062_1" geometry={nodes.Node_cell062_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell062_2" geometry={nodes.Node_cell062_2.geometry} material={materials.lambert2SG} />
-      </group>
-      <mesh name="Node_cell067" geometry={nodes.Node_cell067.geometry} material={materials.lambert4SG} position={[0.067, -0.226, 2.28]} />
-      <mesh name="Node_cell068" geometry={nodes.Node_cell068.geometry} material={materials.blinn1SG} position={[0.424, 0.154, 2.304]} />
-      <group name="Node_cell069" position={[0.221, 0.296, -1.676]}>
-        <mesh name="Node_cell066" geometry={nodes.Node_cell066.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell066_1" geometry={nodes.Node_cell066_1.geometry} material={materials.lambert2SG} />
-      </group>
-      <group name="Node_cell070" position={[0.011, 0.01, 2.123]}>
-        <mesh name="Node_cell067_1" geometry={nodes.Node_cell067_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell067_2" geometry={nodes.Node_cell067_2.geometry} material={materials.lambert3SG} />
-      </group>
-      <mesh name="Node_cell071" geometry={nodes.Node_cell071.geometry} material={materials.lambert4SG} position={[-0.138, -0.227, 2.249]} />
-      <group name="Node_cell073" position={[-0.002, 0.938, -4.762]}>
-        <mesh name="Node_cell070_1" geometry={nodes.Node_cell070_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell070_2" geometry={nodes.Node_cell070_2.geometry} material={materials.lambert2SG} />
-      </group>
-      <group name="Node_cell074" position={[-0.358, -0.403, -1.816]}>
-        <mesh name="Node_cell071_1" geometry={nodes.Node_cell071_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell071_2" geometry={nodes.Node_cell071_2.geometry} material={materials.lambert2SG} />
-      </group>
-      <mesh name="Node_cell075" geometry={nodes.Node_cell075.geometry} material={materials.lambert4SG} position={[0.208, -0.165, 2.251]} />
-      <group name="Node_cell076" position={[-0.354, 0.015, 1.897]}>
-        <mesh name="Node_cell073_1" geometry={nodes.Node_cell073_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell073_2" geometry={nodes.Node_cell073_2.geometry} material={materials.lambert2SG} />
-        <mesh name="Node_cell073_3" geometry={nodes.Node_cell073_3.geometry} material={materials.lambert3SG} />
-      </group>
-      <group name="Node_cell077" position={[0.342, -0.443, -0.86]}>
-        <mesh name="Node_cell074_1" geometry={nodes.Node_cell074_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell074_2" geometry={nodes.Node_cell074_2.geometry} material={materials.lambert2SG} />
-      </group>
-      <group name="Node_cell079" position={[0.061, -0.147, 2.282]}>
-        <mesh name="Node_cell076_1" geometry={nodes.Node_cell076_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell076_2" geometry={nodes.Node_cell076_2.geometry} material={materials.lambert2SG} />
-        <mesh name="Node_cell076_3" geometry={nodes.Node_cell076_3.geometry} material={materials.lambert3SG} />
-      </group>
-      <group name="Node_cell080" position={[-0.092, -0.231, -2.638]}>
-        <mesh name="Node_cell077_1" geometry={nodes.Node_cell077_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell077_2" geometry={nodes.Node_cell077_2.geometry} material={materials.lambert2SG} />
-      </group>
-      <mesh name="Node_cell081" geometry={nodes.Node_cell081.geometry} material={materials.lambert4SG} position={[0.027, -0.231, 2.328]} />
-      <mesh name="Node_cell082" geometry={nodes.Node_cell082.geometry} material={materials.lambert4SG} position={[0.296, -0.247, 2.071]} />
-      <mesh name="Node_cell083" geometry={nodes.Node_cell083.geometry} material={materials.lambert4SG} position={[0.137, -0.213, 2.252]} />
-      <group name="Node_cell085" position={[0.376, -0.046, 2.002]}>
-        <mesh name="Node_cell082_1" geometry={nodes.Node_cell082_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell082_2" geometry={nodes.Node_cell082_2.geometry} material={materials.lambert2SG} />
-        <mesh name="Node_cell082_3" geometry={nodes.Node_cell082_3.geometry} material={materials.lambert3SG} />
-      </group>
-      <group name="Node_cell087" position={[0.312, -0.198, 2.004]}>
-        <mesh name="Node_cell084" geometry={nodes.Node_cell084.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell084_1" geometry={nodes.Node_cell084_1.geometry} material={materials.lambert2SG} />
-        <mesh name="Node_cell084_2" geometry={nodes.Node_cell084_2.geometry} material={materials.lambert3SG} />
-      </group>
-      <group name="Node_cell090" position={[0.017, -0.344, 2.255]}>
-        <mesh name="Node_cell087_1" geometry={nodes.Node_cell087_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell087_2" geometry={nodes.Node_cell087_2.geometry} material={materials.lambert2SG} />
-      </group>
-      <group name="Node_cell091" position={[-0.402, -0.196, -1.25]}>
-        <mesh name="Node_cell088" geometry={nodes.Node_cell088.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell088_1" geometry={nodes.Node_cell088_1.geometry} material={materials.lambert2SG} />
-      </group>
-      <mesh name="Node_cell092" geometry={nodes.Node_cell092.geometry} material={materials.lambert4SG} position={[-0.269, -0.205, 2.131]} />
-      <group name="Node_cell093" position={[0, -0.265, 2.382]}>
-        <mesh name="Node_cell090_1" geometry={nodes.Node_cell090_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell090_2" geometry={nodes.Node_cell090_2.geometry} material={materials.lambert2SG} />
-      </group>
-      <group name="Node_cell094" position={[-0.61, -0.382, -0.119]}>
-        <mesh name="Node_cell091_1" geometry={nodes.Node_cell091_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell091_2" geometry={nodes.Node_cell091_2.geometry} material={materials.lambert2SG} />
-      </group>
-      <mesh name="Node_cell095" geometry={nodes.Node_cell095.geometry} material={materials.lambert4SG} position={[-0.028, -0.232, 2.328]} />
-      <group name="Node_cell096" position={[0.161, -0.087, 2.011]}>
-        <mesh name="Node_cell093_1" geometry={nodes.Node_cell093_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell093_2" geometry={nodes.Node_cell093_2.geometry} material={materials.lambert2SG} />
-        <mesh name="Node_cell093_3" geometry={nodes.Node_cell093_3.geometry} material={materials.lambert3SG} />
-      </group>
-      <group name="Node_cell097" position={[1.269, -0.514, -0.22]}>
-        <mesh name="Node_cell094_1" geometry={nodes.Node_cell094_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell094_2" geometry={nodes.Node_cell094_2.geometry} material={materials.lambert2SG} />
-      </group>
-      <mesh name="Node_cell098" geometry={nodes.Node_cell098.geometry} material={materials.lambert4SG} position={[0.226, -0.165, 2.225]} />
-      <group name="Node_cell017" position={[-0.081, -0.027, 1.817]}>
-        <mesh name="Node_cell096_1" geometry={nodes.Node_cell096_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell096_2" geometry={nodes.Node_cell096_2.geometry} material={materials.lambert3SG} />
-      </group>
-      <mesh name="Node_cell021" geometry={nodes.Node_cell021.geometry} material={materials.lambert4SG} position={[-0.348, -0.224, 1.973]} />
-      <mesh name="Node_cell099" geometry={nodes.Node_cell099.geometry} material={materials.lambert4SG} position={[-0.323, -0.227, 1.998]} />
-      <mesh name="Node_cell100" geometry={nodes.Node_cell100.geometry} material={materials.lambert4SG} position={[-0.302, -0.23, 2.034]} />
-      <mesh name="Node_cell101" geometry={nodes.Node_cell101.geometry} material={materials.lambert2SG} position={[-0.169, -0.475, 1.97]} />
-      <mesh name="Node_cell102" geometry={nodes.Node_cell102.geometry} material={materials.lambert4SG} position={[-0.133, -0.201, 2.247]} />
-      <mesh name="Node_cell103" geometry={nodes.Node_cell103.geometry} material={materials.lambert4SG} position={[-0.182, -0.201, 2.198]} />
-      <mesh name="Node_cell104" geometry={nodes.Node_cell104.geometry} material={materials.lambert4SG} position={[-0.152, -0.205, 2.223]} />
-      <mesh name="Node_cell105" geometry={nodes.Node_cell105.geometry} material={materials.lambert4SG} position={[0.161, -0.214, 2.229]} />
-      <mesh name="Node_cell106" geometry={nodes.Node_cell106.geometry} material={materials.lambert4SG} position={[0.221, -0.195, 2.222]} />
-      <mesh name="Node_cell107" geometry={nodes.Node_cell107.geometry} material={materials.lambert4SG} position={[0.209, -0.192, 2.246]} />
-      <mesh name="Node_cell108" geometry={nodes.Node_cell108.geometry} material={materials.blinn1SG} position={[0.424, 0.155, 2.304]} />
-      <mesh name="Node_cell109" geometry={nodes.Node_cell109.geometry} material={materials.blinn1SG} position={[-0.424, 0.154, 2.304]} />
-      <group name="Node_cell110" position={[1.088, -0.406, -0.371]}>
-        <mesh name="Node_cell111_1" geometry={nodes.Node_cell111_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell111_2" geometry={nodes.Node_cell111_2.geometry} material={materials.lambert2SG} />
-      </group>
-      <mesh name="Node_cell111" geometry={nodes.Node_cell111.geometry} material={materials.lambert4SG} position={[-0.245, -0.211, 2.123]} />
-      <mesh name="Node_cell112" geometry={nodes.Node_cell112.geometry} material={materials.lambert4SG} position={[-0.227, -0.213, 2.148]} />
-      <mesh name="Node_cell113" geometry={nodes.Node_cell113.geometry} material={materials.lambert4SG} position={[-0.208, -0.217, 2.174]} />
-      <mesh name="Node_cell114" geometry={nodes.Node_cell114.geometry} material={materials.lambert4SG} position={[0.348, -0.226, 1.973]} />
-      <mesh name="Node_cell115" geometry={nodes.Node_cell115.geometry} material={materials.lambert4SG} position={[0.371, -0.217, 1.946]} />
-      <group name="Node_cell116" position={[-0.276, -0.262, 2.132]}>
-        <mesh name="Node_cell117_1" geometry={nodes.Node_cell117_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell117_2" geometry={nodes.Node_cell117_2.geometry} material={materials.lambert2SG} />
-      </group>
-      <mesh name="Node_cell118" geometry={nodes.Node_cell118.geometry} material={materials.lambert4SG} position={[-0.097, -0.206, 2.267]} />
-      <mesh name="Node_cell119" geometry={nodes.Node_cell119.geometry} material={materials.lambert4SG} position={[-0.067, -0.223, 2.279]} />
-      <mesh name="Node_cell120" geometry={nodes.Node_cell120.geometry} material={materials.lambert4SG} position={[-0.052, -0.207, 2.303]} />
-      <mesh name="Node_cell121" geometry={nodes.Node_cell121.geometry} material={materials.lambert4SG} position={[0.027, -0.183, 2.404]} />
-      <mesh name="Node_cell122" geometry={nodes.Node_cell122.geometry} material={materials.lambert2SG} position={[0.08, -0.455, 2.091]} />
-      <mesh name="Node_cell123" geometry={nodes.Node_cell123.geometry} material={materials.lambert3SG} position={[-0.008, -0.261, 2.279]} />
-      <mesh name="Node_cell124" geometry={nodes.Node_cell124.geometry} material={materials.lambert2SG} position={[-0.011, -0.398, 2.271]} />
-      <mesh name="Node_cell125" geometry={nodes.Node_cell125.geometry} material={materials.lambert4SG} position={[0.3, -0.162, 2.111]} />
-      <mesh name="Node_cell126" geometry={nodes.Node_cell126.geometry} material={materials.lambert4SG} position={[-0.137, -0.175, 2.324]} />
-      <mesh name="Node_cell127" geometry={nodes.Node_cell127.geometry} material={materials.lambert4SG} position={[0.248, -0.232, 2.123]} />
-      <mesh name="Node_cell128" geometry={nodes.Node_cell128.geometry} material={materials.lambert4SG} position={[0.267, -0.235, 2.097]} />
-      <mesh name="Node_cell129" geometry={nodes.Node_cell129.geometry} material={materials.lambert4SG} position={[0.184, -0.198, 2.199]} />
-      <mesh name="Node_cell130" geometry={nodes.Node_cell130.geometry} material={materials.lambert4SG} position={[0.206, -0.185, 2.166]} />
-      <mesh name="Node_cell132" geometry={nodes.Node_cell132.geometry} material={materials.lambert4SG} position={[-0.028, -0.232, 2.328]} />
-      <mesh name="Node_cell133" geometry={nodes.Node_cell133.geometry} material={materials.lambert4SG} position={[0.026, -0.21, 2.318]} />
-      <mesh name="Node_cell134" geometry={nodes.Node_cell134.geometry} material={materials.lambert4SG} position={[-0.053, -0.223, 2.311]} />
-      <mesh name="Node_cell135" geometry={nodes.Node_cell135.geometry} material={materials.lambert4SG} position={[0.067, -0.178, 2.356]} />
-      <mesh name="Node_cell136" geometry={nodes.Node_cell136.geometry} material={materials.lambert4SG} position={[-0.208, -0.17, 2.249]} />
-      <group name="Node_cell137" position={[-0.212, -0.253, 2.226]}>
-        <mesh name="Node_cell138_1" geometry={nodes.Node_cell138_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell138_2" geometry={nodes.Node_cell138_2.geometry} material={materials.lambert2SG} />
-      </group>
-      <mesh name="Node_cell140" geometry={nodes.Node_cell140.geometry} material={materials.lambert2SG} position={[-0.053, -0.327, 2.306]} />
-      <mesh name="Node_cell141" geometry={nodes.Node_cell141.geometry} material={materials.lambert4SG} position={[-0.058, -0.248, 2.279]} />
-      <group name="Node_cell142" position={[0.266, -0.168, 2.074]}>
-        <mesh name="Node_cell143_1" geometry={nodes.Node_cell143_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell143_2" geometry={nodes.Node_cell143_2.geometry} material={materials.lambert2SG} />
-        <mesh name="Node_cell143_3" geometry={nodes.Node_cell143_3.geometry} material={materials.lambert3SG} />
-      </group>
-      <mesh name="Node_cell143" geometry={nodes.Node_cell143.geometry} material={materials.lambert4SG} position={[0.268, -0.206, 2.094]} />
-      <mesh name="Node_cell144" geometry={nodes.Node_cell144.geometry} material={materials.lambert4SG} position={[0.281, -0.216, 2.066]} />
-      <mesh name="Node_cell145" geometry={nodes.Node_cell145.geometry} material={materials.lambert4SG} position={[0.292, -0.202, 2.106]} />
-      <mesh name="Node_cell146" geometry={nodes.Node_cell146.geometry} material={materials.lambert4SG} position={[0.31, -0.201, 2.066]} />
-      <mesh name="Node_cell147" geometry={nodes.Node_cell147.geometry} material={materials.lambert4SG} position={[0.273, -0.204, 2.131]} />
-      <group name="Node_cell148" position={[0.311, -0.241, 2.11]}>
-        <mesh name="Node_cell149_1" geometry={nodes.Node_cell149_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell149_2" geometry={nodes.Node_cell149_2.geometry} material={materials.lambert2SG} />
-      </group>
-      <mesh name="Node_cell149" geometry={nodes.Node_cell149.geometry} material={materials.lambert4SG} position={[0.295, -0.186, 2.14]} />
-      <mesh name="Node_cell150" geometry={nodes.Node_cell150.geometry} material={materials.lambert4SG} position={[-0.286, -0.177, 2.14]} />
-      <mesh name="Node_cell151" geometry={nodes.Node_cell151.geometry} material={materials.lambert4SG} position={[-0.308, -0.194, 2.118]} />
-      <group name="Node_cell152" position={[0, -0.013, -0.561]}>
-        <mesh name="Node_cell153_1" geometry={nodes.Node_cell153_1.geometry} material={materials.lambert2SG} />
-        <mesh name="Node_cell153_2" geometry={nodes.Node_cell153_2.geometry} material={materials.lambert3SG} />
-      </group>
-      <mesh name="Node_cell153" geometry={nodes.Node_cell153.geometry} material={materials.lambert4SG} position={[-0.062, -0.196, 2.268]} />
-      <group name="Node_cell154" position={[-0.053, -0.25, 2.26]}>
-        <mesh name="Node_cell155_1" geometry={nodes.Node_cell155_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell155_2" geometry={nodes.Node_cell155_2.geometry} material={materials.lambert3SG} />
-      </group>
-      <mesh name="Node_cell155" geometry={nodes.Node_cell155.geometry} material={materials.lambert4SG} position={[-0.324, -0.185, 2.075]} />
-      <mesh name="Node_cell156" geometry={nodes.Node_cell156.geometry} material={materials.lambert4SG} position={[0.265, -0.215, 2.094]} />
-      <mesh name="Node_cell158" geometry={nodes.Node_cell158.geometry} material={materials.lambert4SG} position={[0.208, -0.208, 2.172]} />
-      <mesh name="Node_cell159" geometry={nodes.Node_cell159.geometry} material={materials.lambert4SG} position={[0.228, -0.217, 2.149]} />
-      <mesh name="Node_cell160" geometry={nodes.Node_cell160.geometry} material={materials.lambert4SG} position={[0.234, -0.195, 2.194]} />
-      <mesh name="Node_cell162" geometry={nodes.Node_cell162.geometry} material={materials.lambert4SG} position={[0.136, -0.222, 2.248]} />
-      <mesh name="Node_cell163" geometry={nodes.Node_cell163.geometry} material={materials.lambert2SG} position={[0.054, -0.416, 2.182]} />
-      <mesh name="Node_cell164" geometry={nodes.Node_cell164.geometry} material={materials.lambert4SG} position={[-0.161, -0.229, 2.225]} />
-      <mesh name="Node_cell165" geometry={nodes.Node_cell165.geometry} material={materials.blinn1SG} position={[-0.424, 0.154, 2.304]} />
-      <group name="Node_cell166" position={[-0.347, -0.264, 2.009]}>
-        <mesh name="Node_cell167_1" geometry={nodes.Node_cell167_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell167_2" geometry={nodes.Node_cell167_2.geometry} material={materials.lambert2SG} />
-      </group>
-      <group name="Node_cell167" position={[-0.429, -0.189, 1.97]}>
-        <mesh name="Node_cell168_1" geometry={nodes.Node_cell168_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell168_2" geometry={nodes.Node_cell168_2.geometry} material={materials.lambert2SG} />
-      </group>
-      <mesh name="Node_cell168" geometry={nodes.Node_cell168.geometry} material={materials.lambert4SG} position={[0.053, -0.217, 2.31]} />
-      <mesh name="Node_cell169" geometry={nodes.Node_cell169.geometry} material={materials.lambert4SG} position={[0.069, -0.221, 2.282]} />
-      <mesh name="Node_cell170" geometry={nodes.Node_cell170.geometry} material={materials.lambert4SG} position={[0.136, -0.222, 2.248]} />
-      <mesh name="Node_cell171" geometry={nodes.Node_cell171.geometry} material={materials.lambert4SG} position={[0.128, -0.204, 2.32]} />
-      <mesh name="Node_cell173" geometry={nodes.Node_cell173.geometry} material={materials.lambert4SG} position={[0.029, -0.204, 2.315]} />
-      <mesh name="Node_cell174" geometry={nodes.Node_cell174.geometry} material={materials.lambert4SG} position={[0.185, -0.176, 2.275]} />
-      <group name="Node_cell175" position={[0.153, -0.25, 2.284]}>
-        <mesh name="Node_cell176_1" geometry={nodes.Node_cell176_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell176_2" geometry={nodes.Node_cell176_2.geometry} material={materials.lambert2SG} />
-      </group>
-      <group name="Node_cell176" position={[0.109, -0.046, 1.873]}>
-        <mesh name="Node_cell177_1" geometry={nodes.Node_cell177_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell177_2" geometry={nodes.Node_cell177_2.geometry} material={materials.lambert3SG} />
-      </group>
-      <mesh name="Node_cell177" geometry={nodes.Node_cell177.geometry} material={materials.lambert4SG} position={[0.284, -0.225, 2.064]} />
-      <mesh name="Node_cell178" geometry={nodes.Node_cell178.geometry} material={materials.lambert4SG} position={[0.302, -0.23, 2.034]} />
-      <mesh name="Node_cell179" geometry={nodes.Node_cell179.geometry} material={materials.lambert4SG} position={[0.311, -0.206, 2.062]} />
-      <mesh name="Node_cell180" geometry={nodes.Node_cell180.geometry} material={materials.lambert2SG} position={[0.106, -0.531, 1.904]} />
-      <mesh name="Node_cell181" geometry={nodes.Node_cell181.geometry} material={materials.lambert4SG} position={[-0.371, -0.217, 1.946]} />
-      <group name="Node_cell182" position={[-1.363, -0.554, -0.462]}>
-        <mesh name="Node_cell183_1" geometry={nodes.Node_cell183_1.geometry} material={materials.lambert4SG} />
-        <mesh name="Node_cell183_2" geometry={nodes.Node_cell183_2.geometry} material={materials.lambert2SG} />
-      </group>
-      <mesh name="Node_cell183" geometry={nodes.Node_cell183.geometry} material={materials.lambert2SG} position={[-0.262, -0.362, 2.081]} />
-      <mesh name="Node_cell185" geometry={nodes.Node_cell185.geometry} material={materials.lambert4SG} position={[0.226, -0.198, 2.145]} />
-      <mesh name="Node_cell186" geometry={nodes.Node_cell186.geometry} material={materials.lambert4SG} position={[0.243, -0.198, 2.123]} />
-      <mesh name="origin" geometry={nodes.origin.geometry} material={materials.lambert4SG} />
-      <mesh name="origin_1" geometry={nodes.origin_1.geometry} material={materials.lambert2SG} />
-      <mesh name="origin_2" geometry={nodes.origin_2.geometry} material={materials.lambert3SG} />
-      <mesh name="origin_3" geometry={nodes.origin_3.geometry} material={materials.blinn1SG} />
+      <mesh name="Heart_Full_cell" geometry={nodes.Heart_Full_cell.geometry} material={materials.Red} position={[-0.001, -0.471, -0.005]} />
+      <mesh name="Heart_Full_cell001" geometry={nodes.Heart_Full_cell001.geometry} material={materials.Red} position={[0.147, -0.29, 0.183]} />
+      <mesh name="Heart_Full_cell002" geometry={nodes.Heart_Full_cell002.geometry} material={materials.Red} position={[-0.353, 0.086, -0.129]} />
+      <mesh name="Heart_Full_cell003" geometry={nodes.Heart_Full_cell003.geometry} material={materials.Red} position={[-0.303, 0.173, 0.059]} />
+      <mesh name="Heart_Full_cell004" geometry={nodes.Heart_Full_cell004.geometry} material={materials.Red} position={[0.307, 0.18, 0.062]} />
+      <mesh name="Heart_Full_cell005" geometry={nodes.Heart_Full_cell005.geometry} material={materials.Red} position={[-0.139, -0.134, -0.157]} />
+      <mesh name="Heart_Full_cell006" geometry={nodes.Heart_Full_cell006.geometry} material={materials.Red} position={[-0.357, 0.092, 0.11]} />
+      <mesh name="Heart_Full_cell007" geometry={nodes.Heart_Full_cell007.geometry} material={materials.Red} position={[-0.096, -0.39, -0.082]} />
+      <mesh name="Heart_Full_cell008" geometry={nodes.Heart_Full_cell008.geometry} material={materials.Red} position={[0.337, 0.004, -0.169]} />
+      <mesh name="Heart_Full_cell009" geometry={nodes.Heart_Full_cell009.geometry} material={materials.Red} position={[0.232, -0.117, -0.172]} />
+      <mesh name="Heart_Full_cell010" geometry={nodes.Heart_Full_cell010.geometry} material={materials.Red} position={[0.221, -0.015, 0.192]} />
+      <mesh name="Heart_Full_cell011" geometry={nodes.Heart_Full_cell011.geometry} material={materials.Red} position={[0.119, 0.105, 0.164]} />
+      <mesh name="Heart_Full_cell012" geometry={nodes.Heart_Full_cell012.geometry} material={materials.Red} position={[0.001, -0.409, -0.085]} />
+      <mesh name="Heart_Full_cell013" geometry={nodes.Heart_Full_cell013.geometry} material={materials.Red} position={[0.363, 0.057, 0.127]} />
+      <mesh name="Heart_Full_cell014" geometry={nodes.Heart_Full_cell014.geometry} material={materials.Red} position={[-0.252, -0.083, -0.19]} />
+      <mesh name="Heart_Full_cell015" geometry={nodes.Heart_Full_cell015.geometry} material={materials.Red} position={[-0.121, 0.057, 0.196]} />
+      <mesh name="Heart_Full_cell016" geometry={nodes.Heart_Full_cell016.geometry} material={materials.Red} position={[0.403, -0.001, -0.06]} />
+      <mesh name="Heart_Full_cell017" geometry={nodes.Heart_Full_cell017.geometry} material={materials.Red} position={[-0.002, -0.456, 0.136]} />
+      <mesh name="Heart_Full_cell018" geometry={nodes.Heart_Full_cell018.geometry} material={materials.Red} position={[0.351, -0.123, -0.106]} />
+      <mesh name="Heart_Full_cell019" geometry={nodes.Heart_Full_cell019.geometry} material={materials.Red} position={[-0.4, -0.004, 0.056]} />
+      <mesh name="Heart_Full_cell020" geometry={nodes.Heart_Full_cell020.geometry} material={materials.Red} position={[-0.028, -0.281, -0.083]} />
+      <mesh name="Heart_Full_cell021" geometry={nodes.Heart_Full_cell021.geometry} material={materials.Red} position={[-0.297, -0.187, 0.004]} />
+      <mesh name="Heart_Full_cell022" geometry={nodes.Heart_Full_cell022.geometry} material={materials.Red} position={[0.299, -0.188, 0.013]} />
+      <mesh name="Heart_Full_cell023" geometry={nodes.Heart_Full_cell023.geometry} material={materials.Red} position={[-0.211, -0.261, -0.098]} />
+      <mesh name="Heart_Full_cell024" geometry={nodes.Heart_Full_cell024.geometry} material={materials.Red} position={[0.093, 0.2, 0.022]} />
+      <mesh name="Heart_Full_cell025" geometry={nodes.Heart_Full_cell025.geometry} material={materials.Red} position={[0.219, 0.212, 0.015]} />
+      <mesh name="Heart_Full_cell026" geometry={nodes.Heart_Full_cell026.geometry} material={materials.Red} position={[-0.007, 0.106, -0.146]} />
+      <mesh name="Heart_Full_cell027" geometry={nodes.Heart_Full_cell027.geometry} material={materials.Red} position={[0.336, 0.111, -0.115]} />
+      <mesh name="Heart_Full_cell028" geometry={nodes.Heart_Full_cell028.geometry} material={materials.Red} position={[0.19, 0.182, -0.12]} />
+      <mesh name="Heart_Full_cell029" geometry={nodes.Heart_Full_cell029.geometry} material={materials.Red} position={[0.067, -0.4, 0.052]} />
+      <mesh name="Heart_Full_cell030" geometry={nodes.Heart_Full_cell030.geometry} material={materials.Red} position={[-0.378, 0.109, 0]} />
+      <mesh name="Heart_Full_cell031" geometry={nodes.Heart_Full_cell031.geometry} material={materials.Red} position={[-0.091, -0.387, 0.053]} />
+      <mesh name="Heart_Full_cell032" geometry={nodes.Heart_Full_cell032.geometry} material={materials.Red} position={[-0.197, -0.246, 0.087]} />
+      <mesh name="Heart_Full_cell033" geometry={nodes.Heart_Full_cell033.geometry} material={materials.Red} position={[-0.314, -0.011, 0.149]} />
+      <mesh name="Heart_Full_cell034" geometry={nodes.Heart_Full_cell034.geometry} material={materials.Red} position={[0.169, -0.137, 0.184]} />
+      <mesh name="Heart_Full_cell035" geometry={nodes.Heart_Full_cell035.geometry} material={materials.Red} position={[-0.395, -0.072, -0.011]} />
+      <mesh name="Heart_Full_cell036" geometry={nodes.Heart_Full_cell036.geometry} material={materials.Red} position={[0.001, -0.298, 0.18]} />
+      <mesh name="Heart_Full_cell037" geometry={nodes.Heart_Full_cell037.geometry} material={materials.Red} position={[-0.163, 0.087, -0.176]} />
+      <mesh name="Heart_Full_cell038" geometry={nodes.Heart_Full_cell038.geometry} material={materials.Red} position={[-0.113, 0.201, -0.018]} />
+      <mesh name="Heart_Full_cell039" geometry={nodes.Heart_Full_cell039.geometry} material={materials.Red} position={[0.382, 0.112, 0]} />
+      <mesh name="Heart_Full_cell040" geometry={nodes.Heart_Full_cell040.geometry} material={materials.Red} position={[0.003, 0.03, 0.018]} />
+      <mesh name="Heart_Full_cell041" geometry={nodes.Heart_Full_cell041.geometry} material={materials.Red} position={[0.167, -0.277, 0.03]} />
+      <mesh name="Heart_Full_cell042" geometry={nodes.Heart_Full_cell042.geometry} material={materials.Red} position={[-0.167, 0.187, 0.113]} />
+      <mesh name="Heart_Full_cell043" geometry={nodes.Heart_Full_cell043.geometry} material={materials.Red} position={[-0.273, 0.1, 0.163]} />
+      <mesh name="Heart_Full_cell044" geometry={nodes.Heart_Full_cell044.geometry} material={materials.Red} position={[-0.217, -0.126, 0.191]} />
+      <mesh name="Heart_Full_cell045" geometry={nodes.Heart_Full_cell045.geometry} material={materials.Red} position={[-0.347, -0.12, -0.104]} />
+      <mesh name="Heart_Full_cell046" geometry={nodes.Heart_Full_cell046.geometry} material={materials.Red} position={[0.198, -0.008, -0.205]} />
+      <mesh name="Heart_Full_cell047" geometry={nodes.Heart_Full_cell047.geometry} material={materials.Red} position={[0.38, -0.081, 0.036]} />
+      <mesh name="Heart_Full_cell048" geometry={nodes.Heart_Full_cell048.geometry} material={materials.Red} position={[0.295, -0.139, 0.158]} />
+      <mesh name="Heart_Full_cell049" geometry={nodes.Heart_Full_cell049.geometry} material={materials.Red} position={[-0.347, -0.121, 0.108]} />
+      <mesh name="Heart_Full_cell050" geometry={nodes.Heart_Full_cell050.geometry} material={materials.Red} position={[0.126, -0.244, -0.116]} />
+      <mesh name="Heart_Full_cell051" geometry={nodes.Heart_Full_cell051.geometry} material={materials.Red} position={[0.148, 0.076, -0.195]} />
+      <mesh name="Heart_Full_cell052" geometry={nodes.Heart_Full_cell052.geometry} material={materials.Red} position={[-0.316, 0.008, -0.16]} />
+      <mesh name="Heart_Full_cell053" geometry={nodes.Heart_Full_cell053.geometry} material={materials.Red} position={[-0.122, -0.272, 0.193]} />
+      <mesh name="Heart_Full_cell054" geometry={nodes.Heart_Full_cell054.geometry} material={materials.Red} position={[0.036, -0.118, -0.144]} />
+      <mesh name="Heart_Full_cell055" geometry={nodes.Heart_Full_cell055.geometry} material={materials.Red} position={[0.082, -0.405, -0.072]} />
+      <mesh name="Heart_Full_cell056" geometry={nodes.Heart_Full_cell056.geometry} material={materials.Red} position={[-0.285, 0.173, -0.079]} />
+      <mesh name="Heart_Full_cell057" geometry={nodes.Heart_Full_cell057.geometry} material={materials.Red} position={[0.003, -0.133, 0.199]} />
+      <mesh name="Heart_Full_cell058" geometry={nodes.Heart_Full_cell058.geometry} material={materials.Red} position={[0.273, 0.114, 0.169]} />
+      <mesh name="Heart_Full_cell059" geometry={nodes.Heart_Full_cell059.geometry} material={materials.Red} position={[0.227, -0.216, -0.107]} />
+      <mesh name="origin" geometry={nodes.origin.geometry} material={materials.Red} rotation={[-Math.PI / 2, 0, 0]} scale={100} />
     </group>
   )
 }
